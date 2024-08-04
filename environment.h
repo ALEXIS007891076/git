@@ -8,7 +8,7 @@ struct strvec;
  * The character that begins a commented line in user-editable file
  * that is subject to stripspace.
  */
-extern char comment_line_char;
+extern const char *comment_line_str;
 extern int auto_comment_line_char;
 
 /*
@@ -56,6 +56,13 @@ const char *getenv_safe(struct strvec *argv, const char *name);
 #define GIT_OPTIONAL_LOCKS_ENVIRONMENT "GIT_OPTIONAL_LOCKS"
 #define GIT_TEXT_DOMAIN_DIR_ENVIRONMENT "GIT_TEXTDOMAINDIR"
 #define GIT_ATTR_SOURCE_ENVIRONMENT "GIT_ATTR_SOURCE"
+
+/*
+ * Environment variable used to propagate the --no-advice global option to the
+ * advice_enabled() helper, even when run in a subprocess.
+ * This is an internal variable that should not be set by the user.
+ */
+#define GIT_ADVICE_ENVIRONMENT "GIT_ADVICE"
 
 /*
  * Environment variable used in handshaking the wire protocol.
@@ -124,8 +131,8 @@ extern int warn_ambiguous_refs;
 extern int warn_on_object_refname_ambiguity;
 extern char *apply_default_whitespace;
 extern char *apply_default_ignorewhitespace;
-extern const char *git_attributes_file;
-extern const char *git_hooks_path;
+extern char *git_attributes_file;
+extern char *git_hooks_path;
 extern int zlib_compression_level;
 extern int pack_compression_level;
 extern size_t packed_git_window_size;
@@ -217,12 +224,12 @@ int odb_pack_keep(const char *name);
 const char *get_log_output_encoding(void);
 const char *get_commit_output_encoding(void);
 
-extern const char *git_commit_encoding;
-extern const char *git_log_output_encoding;
+extern char *git_commit_encoding;
+extern char *git_log_output_encoding;
 
-extern const char *editor_program;
-extern const char *askpass_program;
-extern const char *excludes_file;
+extern char *editor_program;
+extern char *askpass_program;
+extern char *excludes_file;
 
 /*
  * Should we print an ellipsis after an abbreviated SHA-1 value

@@ -1,3 +1,5 @@
+#define USE_THE_REPOSITORY_VARIABLE
+
 #include "git-compat-util.h"
 #include "dir.h"
 #include "environment.h"
@@ -91,6 +93,8 @@ static void free_one_config(struct submodule_entry *entry)
 	free((void *) entry->config->path);
 	free((void *) entry->config->name);
 	free((void *) entry->config->branch);
+	free((void *) entry->config->url);
+	free((void *) entry->config->ignore);
 	free((void *) entry->config->update_strategy.command);
 	free(entry->config);
 }
@@ -680,7 +684,7 @@ static int gitmodule_oid_from_commit(const struct object_id *treeish_name,
 	int ret = 0;
 
 	if (is_null_oid(treeish_name)) {
-		oidclr(gitmodules_oid);
+		oidclr(gitmodules_oid, the_repository->hash_algo);
 		return 1;
 	}
 
@@ -978,7 +982,7 @@ int config_set_in_gitmodules_file_gently(const char *key, const char *value)
 {
 	int ret;
 
-	ret = git_config_set_in_file_gently(GITMODULES_FILE, key, value);
+	ret = git_config_set_in_file_gently(GITMODULES_FILE, key, NULL, value);
 	if (ret < 0)
 		/* Maybe the user already did that, don't error out here */
 		warning(_("Could not update .gitmodules entry %s"), key);
